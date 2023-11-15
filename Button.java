@@ -6,39 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Button {
-    String type;
-    static Random rand = new Random();
-
-    public Button(String type) {
-        this.type = type;
-    }
-
-    public void settype(String type) {
-        this.type = type;
-    }
-
-    public String gettype() {
-        return type;
-    }
-
-    private static List<Button> buttons = new ArrayList<>();
-    private static List<Pawn> pawns = new ArrayList<>();
-    private static List<Hole> holes = new ArrayList<>();
-
-    private static int selectedHole = 0;
-    //Order of the colors : Yellow, Red, Green, Blue
-    private static int selectedPawn = 0;
-
-    public static void setSelectedHole(){
-        selectedHole=0;
-    }
-
-    public static void setSelectedPawn(){
-        selectedPawn=0;
-    }
-
-    String[] types = {"Pawn", "Hole", "Validate", "Decoration"};
-
 
     static ImageIcon I0R0B = new ImageIcon("Image\\0R0B.gif");
     static ImageIcon I1B = new ImageIcon("Image\\1B.gif");
@@ -109,7 +76,54 @@ public class Button {
     static ImageIcon IFinM = new ImageIcon("Image\\FinM.gif");
     static ImageIcon IFinX = new ImageIcon("Image\\FinX.gif");
 
+    String type;
+    static Random rand = new Random();
+
+    private static List<Button> buttons = new ArrayList<>();
+    private static List<Pawn> pawns = new ArrayList<>();
+    private static List<Hole> holes = new ArrayList<>();
+
+    private static int selectedHole = 0;
+    //Order of the colors : Yellow, Red, Green, Blue
+    private static int selectedPawn = 0;
+
     static ImageIcon[] imageFin = {IFinA, IFinM, IFinX};
+    static ImageIcon[] imagePions = {IPJ,IPJS,IPR,IPRS,IPV,IPVS,IPB,IPBS,IPO,IPOS,IPVi,IPViS,IPRo,IPRoS,IPBl,IPBlS};
+    static ImageIcon[] imageIcons = {I0R0B,I1B,I2B,I3B,I4B,I1R,I1R1B,I1R2B,I1R3B,I2R, /*10*/I2R1B,I2R2B,I3R,I3R1B,I4R,IEntreBoutons,IL1C1,IL1C2,IL1C3,IL1C5, /*20*/IL1C6,IL1C7,IL1C8,IL2C1,IL2C6,IL2C8,IL3C1,IL3C6,IL3C8,IL9C1, /*30*/IL9C6,IL10C1,IL10C2,IL10C3,IL10C5,IL10C6,IL10C8,IL11C1,IL11C8,IL12C1, /*40*/IL12C2,IL12C3,IL12C7,IL12C8,IPR,IPRS,IPB,IPBS,IPJ,IPJS, /*50*/IPV,IPVS,ITS,IT,IBValideClic,IBValide};
+
+
+    public Button(String type) {
+        this.type = type;
+    }
+
+    public void settype(String type) {
+        this.type = type;
+    }
+
+    public String gettype() {
+        return type;
+    }
+
+    public static void resetPawns(){
+        pawns = new ArrayList<>();
+    }
+
+    public static void resetHoles(){
+        holes = new ArrayList<>();
+    }
+
+    public static void resetButtons(){
+        buttons = new ArrayList<>();
+    }
+
+
+    public static void setSelectedHole(){
+        selectedHole=0;
+    }
+
+    public static void setSelectedPawn(){
+        selectedPawn=0;
+    }
 
     public static ImageIcon getScaledImageIcon(ImageIcon originalIcon) {
         int width = 50;
@@ -133,8 +147,27 @@ public class Button {
         specificButton.repaint();
     }
 
-    static ImageIcon[] imagePions = {IPJ,IPJS,IPR,IPRS,IPV,IPVS,IPB,IPBS,IPO,IPOS,IPVi,IPViS,IPRo,IPRoS,IPBl,IPBlS};
-    static ImageIcon[] imageIcons = {I0R0B,I1B,I2B,I3B,I4B,I1R,I1R1B,I1R2B,I1R3B,I2R, /*10*/I2R1B,I2R2B,I3R,I3R1B,I4R,IEntreBoutons,IL1C1,IL1C2,IL1C3,IL1C5, /*20*/IL1C6,IL1C7,IL1C8,IL2C1,IL2C6,IL2C8,IL3C1,IL3C6,IL3C8,IL9C1, /*30*/IL9C6,IL10C1,IL10C2,IL10C3,IL10C5,IL10C6,IL10C8,IL11C1,IL11C8,IL12C1, /*40*/IL12C2,IL12C3,IL12C7,IL12C8,IPR,IPRS,IPB,IPBS,IPJ,IPJS, /*50*/IPV,IPVS,ITS,IT,IBValideClic,IBValide};
+    public static void restart(JPanel buttonPanel, int numTour, int[] tries, int[] results, String[] colors){
+        GridBagConstraints constraints = new GridBagConstraints();
+        Mastermind.frame.remove(buttonPanel);
+        buttonPanel = new JPanel(new GridLayout(16, 7));
+        Button.createButtons(buttonPanel, constraints);
+        Mastermind.frame.add(buttonPanel);
+        Mastermind.frame.setVisible(true);
+        holes = new ArrayList<>();
+        for (int i = 0; i < tries.length; i++) {
+            holes.add(new Hole("Hole", 0, 0));
+        }
+        selectedPawn = 0;
+        selectedHole = 0;
+        for (int i=0; i<numTour; i++){
+            for (int j=0; j<4; j++){
+                holes.get(4*i+j).color = tries[4*i+j];
+                changeIconButton(8*(12-i)+j+2, buttonPanel, imageIcons[44+2*(tries[4*i+j]-1)]);
+            }
+            changeIconButton(8*(12-i)+7, buttonPanel, imageIcons[results[i]]);
+        }
+    }
 
     static public void setColors(String color1, String color2, String color3, String color4){
         String[] colors = {color1, color2, color3, color4};
@@ -190,6 +223,7 @@ public class Button {
         @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             String actionCommand = e.getActionCommand();
+            System.out.println("Button clicked: " + actionCommand);
             String numberString = actionCommand.replace("Button ", "");
             int buttonNumber = Integer.parseInt(numberString);
             buttonManager(buttonNumber, Mastermind.getbuttonPanel());
@@ -320,7 +354,13 @@ public class Button {
                 }
                 position += nbBlanc;
                 changeIconButton(8*(12-numTour)+7, buttonPanel, imageIcons[position]);
-                
+                Mastermind.addResults(position);
+
+                for (int i = 0; i < 4; i++) {
+                    Hole holeToSave = holes.get(3-i + 4*numTour);
+                    Mastermind.addTries( holeToSave.color);
+                }
+
                 if (nbRouge == 4){
                     Mastermind.numTour = -1;
                     JFrame frameFin = new JFrame("BRAVOOOOOOOOOOO !");
