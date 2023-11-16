@@ -5,8 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Cette classe représente un bouton dans le jeu Mastermind.
+ * Elle contient des icônes d'images statiques pour divers éléments de jeu, ainsi que des méthodes pour gérer les boutons et leurs actions.
+ */
+
 public class Button {
 
+    // Définition des images utilisées pour les différents éléments du jeu
     static ImageIcon I0R0B = new ImageIcon("Image\\0R0B.gif");
     static ImageIcon I1B = new ImageIcon("Image\\1B.gif");
     static ImageIcon I1R = new ImageIcon("Image\\1R.gif");
@@ -84,7 +90,6 @@ public class Button {
     private static List<Hole> holes = new ArrayList<>();
 
     private static int selectedHole = 0;
-    //Order of the colors : Yellow, Red, Green, Blue
     private static int selectedPawn = 0;
 
     static ImageIcon[] imageFin = {IFinA, IFinM, IFinX};
@@ -92,39 +97,71 @@ public class Button {
     static ImageIcon[] imageIcons = {I0R0B,I1B,I2B,I3B,I4B,I1R,I1R1B,I1R2B,I1R3B,I2R, /*10*/I2R1B,I2R2B,I3R,I3R1B,I4R,IEntreBoutons,IL1C1,IL1C2,IL1C3,IL1C5, /*20*/IL1C6,IL1C7,IL1C8,IL2C1,IL2C6,IL2C8,IL3C1,IL3C6,IL3C8,IL9C1, /*30*/IL9C6,IL10C1,IL10C2,IL10C3,IL10C5,IL10C6,IL10C8,IL11C1,IL11C8,IL12C1, /*40*/IL12C2,IL12C3,IL12C7,IL12C8,IPR,IPRS,IPB,IPBS,IPJ,IPJS, /*50*/IPV,IPVS,ITS,IT,IBValideClic,IBValide};
 
 
+    /**
+     * Constructeur de la classe Button
+     * @param type le type de bouton
+     */
     public Button(String type) {
         this.type = type;
     }
 
+    /**
+     * Modifie le type de bouton
+     * @param type le nouveau type de bouton
+     */
     public void settype(String type) {
         this.type = type;
     }
 
+    /**
+     * Retourne le type de bouton
+     * @return le type de bouton
+     */
     public String gettype() {
         return type;
     }
 
+    /**
+     * Réinitialise la liste des pions
+     */
     public static void resetPawns(){
         pawns = new ArrayList<>();
     }
 
+    /**
+     * Réinitialise la liste des trous
+     */
     public static void resetHoles(){
         holes = new ArrayList<>();
     }
 
+    /**
+     * Réinitialise la liste des boutons
+     */
     public static void resetButtons(){
         buttons = new ArrayList<>();
     }
 
 
+    /**
+     * Réinitialise le trou actif
+     */
     public static void setSelectedHole(){
         selectedHole=0;
     }
 
+    /**
+     * Réinitialise le pion actif
+     */
     public static void setSelectedPawn(){
         selectedPawn=0;
     }
 
+    /**
+     * Redimensionne une image
+     * @param originalIcon l'image originale
+     * @return l'image redimensionnée
+     */
     public static ImageIcon getScaledImageIcon(ImageIcon originalIcon) {
         int width = 50;
         int height = 50;
@@ -133,42 +170,49 @@ public class Button {
         return new ImageIcon(scaledImage);
     }
 
+    /**
+     * Change l'icône d'un bouton
+     * @param buttonNumber le numéro du bouton
+     * @param buttonPanel le panel contenant le bouton
+     * @param image la nouvelle image à afficher sur le bouton
+     */
     public static void changeIconButton(int buttonNumber, JPanel buttonPanel, ImageIcon image) {
 
         Component[] components = buttonPanel.getComponents();
 
-        // Get a specific button
+        // Récupère le bouton spécifique
         JButton specificButton = (JButton) components[buttonNumber-1];
 
-        // Modify the button
+        // Modifie le bouton
         ImageIcon scaledIcon = getScaledImageIcon(image);
         specificButton.setIcon(scaledIcon);
         specificButton.revalidate();
         specificButton.repaint();
     }
 
-    public static void restart(JPanel buttonPanel, int numTour, int[] tries, int[] results, String[] colors){
-        GridBagConstraints constraints = new GridBagConstraints();
-        Mastermind.frame.remove(buttonPanel);
-        buttonPanel = new JPanel(new GridLayout(16, 7));
-        Button.createButtons(buttonPanel, constraints);
-        Mastermind.frame.add(buttonPanel);
-        Mastermind.frame.setVisible(true);
-        holes = new ArrayList<>();
-        for (int i = 0; i < tries.length; i++) {
-            holes.add(new Hole("Hole", 0, 0));
-        }
-        selectedPawn = 0;
-        selectedHole = 0;
+    /**
+     * Rempli les trous et les résultats avec les enregistrements d'une partie précédente
+     * @param numTour le numéro du tour
+     * @param results les résultats sauvegardés 
+     * @param Tries les combinaisons sauvegardées
+     */
+    public static void restartIcons(int numTour, int[]results, int[]Tries){
         for (int i=0; i<numTour; i++){
-            for (int j=0; j<4; j++){
-                holes.get(4*i+j).color = tries[4*i+j];
-                changeIconButton(8*(12-i)+j+2, buttonPanel, imageIcons[44+2*(tries[4*i+j]-1)]);
+            for (int j = 0; j < 4; j++) {
+                changeIconButton(8*(12-i)+2+j, Mastermind.getbuttonPanel(), imageIcons[44+2*(Tries[4*i+j]-1)]);
             }
-            changeIconButton(8*(12-i)+7, buttonPanel, imageIcons[results[i]]);
+            changeIconButton(8*(12-i)+7, Mastermind.getbuttonPanel(), imageIcons[(results[i])]);
         }
     }
 
+
+    /**
+     * Définit les couleurs des pions
+     * @param color1 la couleur du premier pion
+     * @param color2 la couleur du deuxième pion
+     * @param color3 la couleur du troisième pion
+     * @param color4 la couleur du quatrième pion
+     */
     static public void setColors(String color1, String color2, String color3, String color4){
         String[] colors = {color1, color2, color3, color4};
         List<ImageIcon> imageIconsList = new ArrayList<>(Arrays.asList(imageIcons));
@@ -219,6 +263,9 @@ public class Button {
         imageIcons = imageIconsList.toArray(new ImageIcon[0]);
     }
     
+    /**
+     * Gestionnaire d'événements pour les boutons
+     */
     static java.awt.event.ActionListener buttonActionListener = new java.awt.event.ActionListener() {
         @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -230,8 +277,14 @@ public class Button {
         }
     };
 
+    /**
+     * Conséquences de l'action sur un bouton en fonction de son numéro
+     * @param buttonNumber le numéro du bouton
+     * @param buttonPanel le panel contenant le bouton
+     */
     static public void buttonManager(int buttonNumber, JPanel buttonPanel) {
         int numTour = Mastermind.getNumTour();
+        // Si le bouton est un trou
         if( 8*(12-numTour) +1 < buttonNumber && buttonNumber < 8*(12-numTour)+6 && numTour<12){
             int holeNumber = buttonNumber - (8*(12-numTour)+1);
             Hole hole = holes.get(4-holeNumber + 4*numTour);
@@ -273,6 +326,7 @@ public class Button {
                 changeIconButton(buttonNumber, buttonPanel, imageIcons[52]);
             }
         }
+        // Si le bouton est un pion
         else if( 113 < buttonNumber && buttonNumber < 118 && numTour<12){
             if (buttonNumber == selectedPawn){
                 selectedPawn = 0;
@@ -297,7 +351,7 @@ public class Button {
                 changeIconButton(buttonNumber, buttonPanel, imageIcons[44+2*(buttonNumber-114)+1]);
             }
         }
-
+        // Si le bouton est le bouton de validation
         else if(buttonNumber == 119 && numTour<12){
             boolean isFull = true;
             int nbRouge = 0;
@@ -333,6 +387,7 @@ public class Button {
                 }
             }
 
+            //Si tous les trous du tour sont remplis
             if (isFull){
                 int position;
                 switch (nbRouge) {
@@ -361,6 +416,7 @@ public class Button {
                     Mastermind.addTries( holeToSave.color);
                 }
 
+                //Si la combinaison est trouvée
                 if (nbRouge == 4){
                     Mastermind.numTour = -1;
                     JFrame frameFin = new JFrame("BRAVOOOOOOOOOOO !");
@@ -382,11 +438,15 @@ public class Button {
         }
     }
 
+    /**
+     * Crée les boutons du plateau de jeu et les ajoute au panel de boutons donné en paramètre.
+     * @param buttonPanel le panel de boutons où ajouter les boutons créés
+     * @param constraints les contraintes de placement des boutons dans le panel
+     */
     static void createButtons(JPanel buttonPanel, GridBagConstraints constraints) {
         int adaptateur;
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 8; col++) {
-                JButton buttonFrame;
                 adaptateur = 0;
                 ImageIcon image;
                 if(col==6 && 0<row && row<13){
@@ -499,7 +559,7 @@ public class Button {
 
 
                 ImageIcon scaledIcon = getScaledImageIcon(image);
-                buttonFrame = new JButton(scaledIcon);
+                JButton buttonFrame = new JButton(scaledIcon);
                 buttonFrame.setActionCommand("Button " + (row * 8 + col + 1));
                 buttonFrame.addActionListener(buttonActionListener);
 
