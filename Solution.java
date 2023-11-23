@@ -2,7 +2,10 @@ import java.util.Random;
 
 // Définition de la classe Solution
 public class Solution {
-
+    /**
+     * Cette classe représente la solution dans le jeu Mastermind.
+     * 
+     */
     static Random rand = new Random();
 
     // Définition de la méthode resetCode qui renvoie un tableau d'entiers qui servira de code à trouver

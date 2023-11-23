@@ -3,7 +3,10 @@ public class Hole extends Button {
     int row; // numéro de ligne
     int col; // numéro de colonne
     int color=0 ; // couleur du trou, initialisée à 0
-
+    /**
+     * Cette classe représente un trou dans le jeu Mastermind.
+     * 
+     */
     // Constructeur de la classe Hole
     public Hole(String type, int row, int col) {
         super(type); 

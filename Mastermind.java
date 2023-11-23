@@ -137,7 +137,7 @@ public class Mastermind {
      */
     public static void main(String[] args) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(416, 832);
+        frame.setSize(480, 960);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
